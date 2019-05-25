@@ -7,7 +7,7 @@ var connection = mysql.createConnection ({
     host: 'localhost',
     port: 3306,
 
-    user: 'homework-bamazon',
+    user: 'root',
 
     password: '',
     database: 'bamazon_db'
@@ -63,7 +63,7 @@ inquirer
                         connection.end();
                     })
                 } else {
-                        console.log ('\nThere is not enough product in stock, therefore, your order cannot be placed.');
+                        console.log ('\nInsufficient! There is not enough product in stock, therefore, your order cannot be placed.');
                         console.log ('\nPlease modify your order and replace your products again.');
                         console.log('\n----------------------------------------------\n');
 
@@ -74,4 +74,37 @@ inquirer
     })
 }
 
+//displaying full inventory from mySQL database and putting it into the console utilizing cli-table
+function displayInventory() {
+    var queryDB = 'SELECT * FROM products';
 
+    connection.query(queryDB, function (err, data){
+        if (err) throw err;
+
+        console.log ('Existing Inventory: ');
+        console.log('*********************\n');
+        
+        var input = '';
+        for (var i = 0; i < data.length; i++) {
+            input = '';
+            input += 'Item ID: ' + data[i].id + ' // ';
+            input += 'Product Name: ' + data[i].name + ' // ';
+            input += 'Department: ' + data[i].department_name + ' // ';
+            input += 'Price: $' + data[i].price + ' // ';
+
+            console.log(input);
+        }
+
+        console.log('----------------------------------------\n');
+
+        userPurchase();
+
+    })
+}
+
+function Bamazon () {
+    displayInventory();
+}
+
+
+Bamazon();
