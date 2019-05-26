@@ -13,8 +13,18 @@ var connection = mysql.createConnection ({
     database: 'bamazon_db'
 });
 
-connection.connect();
+// connection.connect();
 
+function correctInput(value){
+    var integer = Number.isInteger(parseFloat(value));
+    var sign = Math.sign(value);
+
+    if (integer && (sign === 1)) {
+        return true;
+    } else {
+        return 'Enter a whole non-zero number.';
+    }
+}
 
 //prompting user for item quantity
 function userPurchase () {
@@ -24,14 +34,14 @@ inquirer
         type: 'input',
         name: 'id',
         message: 'Please enter the ID of the item you would like to purchase.',
-        filter: number,
+        filter: Number,
         validate: correctInput
     },
     {
         type: 'input',
         name: 'quantity',
         message: 'How many would you like to purchase?',
-        filter: number,
+        filter: Number,
     }
     ]).then(function(input){
         var item = input.id;
@@ -39,10 +49,10 @@ inquirer
 
         var queryID = 'SELECT * FROM products WHERE ?';
 
-        connection.query(queryID, {id: item}, function (err, result) {
+        connection.query(queryID, {id: item}, function (err, data) {
             if (err) throw err;
 
-            if (result.length === 0) {
+            if (data.length === 0) {
                 console.log('Sorry, invalid item ID. Please select a valid ID.');
                 displayInventory();
             } else {
@@ -91,6 +101,7 @@ function displayInventory() {
             input += 'Product Name: ' + data[i].name + ' // ';
             input += 'Department: ' + data[i].department_name + ' // ';
             input += 'Price: $' + data[i].price + ' // ';
+            input += 'Quantity: ' + data[i].stock_quantity;
 
             console.log(input);
         }

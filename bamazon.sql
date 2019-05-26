@@ -27,4 +27,5 @@ VALUES (2, "Super Smash Bros Ultimate", "Electronic", 49.99, 80),
 (3, "PS4 Bundle Console", "Electronic", 299.99, 40),
 (8, "Crest 3D Whitening-Stripes", "Personal Care", 29.99, 50),
 (9, "Powerbeats Wireless Headphones", "Electronic", 299.99, 30),
-(7, "Claritin Liquid-Gel" , "Medicine", 8.99, 120);
+(7, "Claritin Liquid-Gel" , "Medicine", 8.99, 120),
+(6, "Aveeno Active Naturals Facial Cleaner" , "Personal Care", 12.99, 95);
