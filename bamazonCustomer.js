@@ -32,7 +32,7 @@ inquirer
     .prompt ([
     {
         type: 'input',
-        name: 'id',
+        name: 'item_id',
         message: 'Please enter the ID of the item you would like to purchase.',
         filter: Number,
         validate: correctInput
@@ -41,15 +41,16 @@ inquirer
         type: 'input',
         name: 'quantity',
         message: 'How many would you like to purchase?',
+        validate: correctInput,
         filter: Number,
     }
     ]).then(function(input){
-        var item = input.id;
+        var item = input.item_id;
         var quantity = input.quantity;
 
         var queryID = 'SELECT * FROM products WHERE ?';
 
-        connection.query(queryID, {id: item}, function (err, data) {
+        connection.query(queryID, {item_id: item}, function (err, data) {
             if (err) throw err;
 
             if (data.length === 0) {
@@ -61,7 +62,7 @@ inquirer
                 if (quantity <= productData.stock_quantity) {
                     console.log ('The product you requested is in stock! Placing your order now.');
 
-                    var updateQueryID = 'UPDATE products SET stock_quantity =  ' + (productData.stock_quantity - quantity) + 'WHERE id = ' + item;
+                    var updateQueryID = 'UPDATE products SET stock_quantity =  ' + (productData.stock_quantity - quantity);
                 
                     connection.query(updateQueryID, function(err, data) {
                         if (err) throw err;
@@ -97,7 +98,7 @@ function displayInventory() {
         var input = '';
         for (var i = 0; i < data.length; i++) {
             input = '';
-            input += 'Item ID: ' + data[i].id + ' // ';
+            input += 'Item ID: ' + data[i].item_id + ' // ';
             input += 'Product Name: ' + data[i].name + ' // ';
             input += 'Department: ' + data[i].department_name + ' // ';
             input += 'Price: $' + data[i].price + ' // ';
@@ -113,9 +114,9 @@ function displayInventory() {
     })
 }
 
-function Bamazon () {
+function runBamazon () {
     displayInventory();
 }
 
 
-Bamazon();
+runBamazon();
