@@ -91,7 +91,18 @@ var displayInventory = function () {
     connection.query(queryDB, function (err, data){
         if (err) throw err; 
         
-
+        var table = new Table({
+            head: ['Item ID', 'Product Name', 'Department Name', 'Price', 'Quantity']
+          , colWidths: [20, 40,40,20,20]
+        });
+         
+        // table is an Array, so you can `push`, `unshift`, `splice` and friends
+        table.push(
+            ['First value', 'Second value']
+          , ['First value', 'Second value']
+        );
+         
+        console.log(table.toString());
     })
 }
 
