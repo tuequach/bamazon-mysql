@@ -13,7 +13,34 @@ var connection = mysql.createConnection ({
     database: 'bamazon_db'
 });
 
-// connection.connect();
+connection.connect(function (err){
+    if (err) throw err; 
+    // console.log( 'connected as id' + connection.threadID);
+});
+
+//display inventory from mySQL implementing CLI TABLE
+var displayInventory = function () {
+    var queryDB = 'SELECT * FROM products';
+    connection.query(queryDB, function (err, data){
+        if (err) throw err; 
+        
+        var inventoryTable = new Table({
+            head: ['Item ID', 'Product Name', 'Department Name', 'Price', 'Quantity'],
+            colWidths: [20, 40,40,20,20]
+        });
+         
+        // table is an Array, so you can `push`, `unshift`, `splice` and friends
+        for (var i = 0; i < data.length; i++) {
+            inventoryTable.push([
+                data[i].item_id, data[i].name, data[i].department_name, data[i].price, data[i].stock_quantity
+            ]);
+        }
+        console.log(inventoryTable.toString());
+        userPurchase();
+        
+    });
+}
+
 
 function correctInput(value){
     var integer = Number.isInteger(parseFloat(value));
@@ -39,7 +66,7 @@ inquirer
     },
     {
         type: 'input',
-        name: 'stock_quantity',
+        name: 'quantity',
         message: 'How many would you like to purchase?',
         validate: correctInput,
         filter: Number,
@@ -62,7 +89,7 @@ inquirer
                 if (quantity <= productData.quantity) {
                     console.log ('The product you requested is in stock! Placing your order now.');
 
-                    var updateQueryID = 'UPDATE products SET stock_quantity = ' + (productData.quantity - quantity) + 'WHERE item_id =' +item;
+                    var updateQueryID = 'UPDATE products SET stock_quantity = ' + (productData.stock_quantity - quantity) + 'WHERE item_id =' + item;
                 
                     connection.query(updateQueryID, function(err, data) {
                         if (err) throw err;
@@ -85,28 +112,6 @@ inquirer
     })
 }
 
-//display inventory from mySQL implementing CLI TABLE
-var displayInventory = function () {
-    var queryDB = 'SELECT * FROM products';
-    connection.query(queryDB, function (err, data){
-        if (err) throw err; 
-        
-        var table = new Table({
-            head: ['Item ID', 'Product Name', 'Department Name', 'Price', 'Quantity']
-          , colWidths: [20, 40,40,20,20]
-        });
-         
-        // table is an Array, so you can `push`, `unshift`, `splice` and friends
-        for (var i = 0; i < data.length;i++) {
-            table.push([
-                data[i].item_id, data[i].name, data[i].department_name, data[i].price, data[i].stock_quantity
-            ]);
-        
-        console.log(table.toString());
-        userPurchase();
-        }
-    });
-}
 
 //displaying full inventory from mySQL database and putting it into the console utilizing cli-table
 // function displayInventory() {
