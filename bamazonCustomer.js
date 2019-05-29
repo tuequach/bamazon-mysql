@@ -1,7 +1,7 @@
 //required dependencies 
 var inquirer = require('inquirer');
 var mysql = require('mysql')
-var table = require('cli-table');
+var Table = require('cli-table');
 
 var connection = mysql.createConnection ({
     host: 'localhost',
@@ -97,13 +97,15 @@ var displayInventory = function () {
         });
          
         // table is an Array, so you can `push`, `unshift`, `splice` and friends
-        table.push(
-            ['First value', 'Second value']
-          , ['First value', 'Second value']
-        );
-         
+        for (var i = 0; i < data.length;i++) {
+            table.push([
+                data[i].item_id, data[i].name, data[i].department_name, data[i].price, data[i].stock_quantity
+            ]);
+        
         console.log(table.toString());
-    })
+        userPurchase();
+        }
+    });
 }
 
 //displaying full inventory from mySQL database and putting it into the console utilizing cli-table
@@ -130,10 +132,10 @@ var displayInventory = function () {
 
 //         console.log('----------------------------------------\n');
 
-        userPurchase();
+//         userPurchase();
 
-    })
-}
+//     })
+// }
 
 function runBamazon () {
     displayInventory();
